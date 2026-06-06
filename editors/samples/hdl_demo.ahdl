@@ -1,0 +1,44 @@
+-- aria: hdl
+-- FPGA hardware description DSL — modules, pipelines, systolic, types.
+
+@clock_freq(250_000_000)
+module mac_unit(a: fp16, b: fp16, acc_in: fp32) -> fp32 {
+    let prod: fp32 = a * b
+    acc_in + prod
+}
+
+@clock_freq(12_000_000)
+module blinker() -> bit {
+    const HALF_PERIOD: uint<24> = 6_000_000
+    const MAGIC      : bits<32> = 0xDEAD_BEEF
+
+    var counter: uint<24> = 0
+    var led    : bit      = 0
+
+    counter := counter + 1
+    when counter == HALF_PERIOD {
+        counter := 0
+        led := !led
+    }
+
+    led
+}
+
+pipeline conv1d(x: stream<fp16>, w: fix<16, 8>) -> stream<fp32> {
+    stage load   { let xi = x.read() }
+    |> stage mul { let pi: fp32 = xi * w }
+    |> stage acc { let yi = pi + prev_acc }
+}
+
+systolic matmul(a: mx<fp8e4m3, 16>, b: mx<fp8e4m3, 16>) -> fp32 {
+    flow accumulate {
+        pe(i, j) {
+            let prod = a[i] * b[j]
+            assert always (prod >= 0.0)
+            assume (i < 16)
+            cover eventually (j == 15)
+        }
+    }
+}
+
+assert forall x in 0..16 { x < 16 }

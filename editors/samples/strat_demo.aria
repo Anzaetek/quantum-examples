@@ -1,0 +1,42 @@
+-- aria: strat
+-- gpu-backtest strategy DSL — exercises every syntax category.
+
+let rsi_period = 14
+let qty       = 1.0
+let threshold = 0.0001
+
+-- Indicator pipeline (temporal builtins).
+signal change   = close - prev(close)
+signal gain     = max(change, 0.0)
+signal loss     = max(-change, 0.0)
+signal avg_gain = ema(gain, rsi_period)
+signal avg_loss = ema(loss, rsi_period)
+signal rs       = avg_gain / max(avg_loss, threshold)
+signal rsi      = 100.0 - 100.0 / (1.0 + rs)
+
+-- Statistical builtins.
+signal z = zscore(close, 50)
+signal p = percentile(volume, 90)
+signal s = stdev(returns, 20)
+
+-- Crossings & extrema.
+signal up   = cross_up(close, sma(close, 200))
+signal down = cross_down(close, sma(close, 200))
+signal hi   = run_max(close, 100)
+signal lo   = run_min(close, 100)
+
+-- Predicates with logical operators.
+signal oversold   = rsi < 30.0 && z < -2.0
+signal overbought = rsi > 70.0 || p > 95.0
+
+strategy rsi_with_trend {
+    when oversold   -> limit_buy(qty, close * 0.999)
+    when overbought -> limit_sell(qty, close * 1.001)
+    when up         -> buy(qty)
+    when down       -> sell(qty)
+    when false      -> flatten()
+}
+
+/* legacy block-comment syntax tolerated.
+   spans multiple lines. */
+// legacy line-comment syntax tolerated.

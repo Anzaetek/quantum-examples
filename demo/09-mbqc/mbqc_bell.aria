@@ -1,0 +1,38 @@
+-- Smallest non-trivial MBQC pattern — produces a Bell pair.
+-- Rust counterpart: crates/quantum-core/src/mbqc/{compile,simulate}.rs
+--                   crates/quantum-core/examples/mbqc_demo.rs
+--
+-- Graph state: 5 vertices in a chain.  Vertices 0, 1, 3 are measured
+-- in the X basis (φ = 0); vertices 2 and 4 carry the output Bell pair.
+
+@assert unitary
+@prove "mbqc_creates_bell" equiv { creates (|00> + |11>)/sqrt(2) on output }
+@bound vertices = 5
+
+circuit MbqcBell {
+    qreg q[5]                     -- pattern vertices
+    creg c[3]                     -- measurement outcomes
+
+    -- Preparation: every vertex in |+⟩.
+    apply H on q[0]
+    apply H on q[1]
+    apply H on q[2]
+    apply H on q[3]
+    apply H on q[4]
+
+    -- Graph-state edges (CZ along each edge of the chain).
+    apply CZ on q[0], q[1]
+    apply CZ on q[1], q[2]
+    apply CZ on q[2], q[3]
+    apply CZ on q[3], q[4]
+
+    -- Measure vertices 0, 1, 3 in the X basis.
+    apply H on q[0]               -- rotate into Z basis
+    measure q[0] -> c[0]
+    apply H on q[1]
+    measure q[1] -> c[1]
+    apply H on q[3]
+    measure q[3] -> c[2]
+
+    -- Outputs: q[2] and q[4] hold the Bell-pair entanglement.
+}

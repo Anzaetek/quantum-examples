@@ -1,0 +1,134 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Aria (strat)",
+  "scopeName": "source.aria.strat",
+  "fileTypes": ["aria"],
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#keyword" },
+    { "include": "#string" },
+    { "include": "#builtin-function" },
+    { "include": "#action" },
+    { "include": "#constant" },
+    { "include": "#number" },
+    { "include": "#type-name" },
+    { "include": "#operator" },
+    { "include": "#punctuation" },
+    { "include": "#identifier" }
+  ],
+  "repository": {
+    "comment": {
+      "patterns": [
+        { "name": "comment.line.double-dash.aria",   "match": "--.*$" },
+        { "name": "comment.line.double-slash.aria",  "match": "//.*$" },
+        {
+          "name": "comment.block.aria",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "keyword": {
+      "patterns": [
+        { "name": "keyword.declaration.signal.aria", "match": "\\b(signal|strategy)\\b" },
+        { "name": "storage.type.binding.aria",       "match": "\\b(let|var)\\b" },
+        { "name": "keyword.control.flow.aria",       "match": "\\b(when|if|else)\\b" }
+      ]
+    },
+    "string": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.aria",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            { "name": "constant.character.escape.aria", "match": "\\\\." }
+          ]
+        }
+      ]
+    },
+    "builtin-function": {
+      "patterns": [
+        {
+          "comment": "Indicators / temporal / statistical / math builtins (only at call sites).",
+          "name": "support.function.builtin.aria",
+          "match": "\\b(sma|ema|cross_up|cross_down|run_max|run_min|prev|stdev|zscore|percentile|abs|max|min|exp|log|linreg_slope|hurst)\\b(?=\\s*\\()"
+        }
+      ]
+    },
+    "action": {
+      "patterns": [
+        {
+          "comment": "Order actions emitted from strategy when-arms.",
+          "name": "keyword.other.action.aria",
+          "match": "\\b(buy|sell|flatten|limit_buy|limit_sell|vwap)\\b(?=\\s*\\()"
+        }
+      ]
+    },
+    "constant": {
+      "patterns": [
+        { "name": "constant.language.boolean.aria", "match": "\\b(true|false)\\b" }
+      ]
+    },
+    "number": {
+      "patterns": [
+        { "name": "constant.numeric.float.aria",   "match": "\\b[0-9]+\\.[0-9]+([eE][+\\-]?[0-9]+)?\\b" },
+        { "name": "constant.numeric.float.aria",   "match": "\\.[0-9]+([eE][+\\-]?[0-9]+)?\\b" },
+        { "name": "constant.numeric.integer.aria", "match": "\\b[0-9]+([eE][+\\-]?[0-9]+)?\\b" }
+      ]
+    },
+    "type-name": {
+      "patterns": [
+        {
+          "match": "(:)\\s*([a-zA-Z_][a-zA-Z0-9_]*)",
+          "captures": {
+            "1": { "name": "punctuation.separator.type.aria" },
+            "2": { "name": "entity.name.type.aria" }
+          }
+        }
+      ]
+    },
+    "operator": {
+      "patterns": [
+        { "name": "keyword.operator.pipe.aria",       "match": "\\|>" },
+        { "name": "keyword.operator.update.aria",     "match": ":=" },
+        { "name": "keyword.operator.arrow.aria",      "match": "->" },
+        { "name": "keyword.operator.logical.aria",    "match": "&&|\\|\\||!" },
+        { "name": "keyword.operator.comparison.aria", "match": "==|!=|<=|>=|<|>" },
+        { "name": "keyword.operator.assignment.aria", "match": "=" },
+        { "name": "keyword.operator.arithmetic.aria", "match": "\\+|\\-|\\*|/|\\^|%" }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        { "name": "punctuation.section.brace.aria",       "match": "[{}]" },
+        { "name": "punctuation.section.bracket.aria",     "match": "[\\[\\]]" },
+        { "name": "punctuation.section.paren.aria",       "match": "[()]" },
+        { "name": "punctuation.separator.comma.aria",     "match": "," },
+        { "name": "punctuation.terminator.semicolon.aria","match": ";" }
+      ]
+    },
+    "identifier": {
+      "patterns": [
+        {
+          "comment": "Strategy name in declaration position.",
+          "match": "\\b(strategy)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+          "captures": {
+            "1": { "name": "keyword.declaration.signal.aria" },
+            "2": { "name": "entity.name.type.strategy.aria" }
+          }
+        },
+        {
+          "comment": "Signal name in declaration position: `signal NAME =`.",
+          "match": "\\b(signal)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+          "captures": {
+            "1": { "name": "keyword.declaration.signal.aria" },
+            "2": { "name": "variable.other.signal.aria" }
+          }
+        },
+        { "name": "entity.name.function.call.aria", "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*(?=\\s*\\()" },
+        { "name": "variable.other.aria",            "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b" }
+      ]
+    }
+  }
+}

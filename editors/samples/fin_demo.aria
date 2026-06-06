@@ -1,0 +1,40 @@
+-- aria: fin
+-- Financial contract DSL — combinators, ISO dates, market observations.
+
+contract EuropeanCall {
+    let K = 100.0
+    let T = 2026-06-20
+    let S = spot("KOSPI2")
+
+    one("KRW") |> scale(max(S - K, 0.0)) |> when(T)
+}
+
+contract DownAndOutBarrier {
+    let K       = 100.0
+    let H       = 70.0
+    let S       = spot("KOSPI2")
+    let T       = 2026-12-31
+    let barrier = running_min(S, 2026-01-01..2026-12-31)
+
+    barrier(down_out, H, one("USD") |> scale(max(S - K, 0.0))) |> when(T)
+}
+
+contract IRSwap {
+    let r = rate("USD-3M")
+    let f = daycount(2026-01-01, 2026-04-01, "ACT/360")
+    let n = 1000000.0
+
+    for d in [2026-04-01, 2026-07-01, 2026-10-01, 2027-01-01] {
+        cash_flow(n * r * f, "USD") |> on(d)
+    }
+}
+
+contract Autocall {
+    let basket = min(spot("A"), spot("B"))
+    var pmin   = 1000000.0
+    var tf     = 0.0
+    pmin := min(pmin, basket)
+
+    let trigger = smooth_step(0.9 - pmin, 10.0, 0.0)
+    cond(survival(trigger), one("EUR"), zero) |> autocall
+}

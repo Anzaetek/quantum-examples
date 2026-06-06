@@ -1,0 +1,16 @@
+-- Bell state: (|00> + |11>) / sqrt(2)
+-- An Aria quantum model: human-readable, with built-in proof obligations.
+
+@assert unitary
+@prove "bell_correct" equiv { creates (|00> + |11>)/sqrt(2) }
+@bound gate_count = 2
+
+circuit Bell {
+    qreg q[2]
+    creg c[2]
+
+    apply H on q[0]            -- superpose q[0]
+    apply CX on q[0], q[1]     -- entangle q[1] with q[0]
+
+    measure q -> c
+}

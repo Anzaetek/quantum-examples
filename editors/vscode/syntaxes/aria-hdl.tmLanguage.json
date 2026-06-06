@@ -1,0 +1,150 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Aria (hdl)",
+  "scopeName": "source.aria.hdl",
+  "fileTypes": ["ahdl"],
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#annotation" },
+    { "include": "#keyword" },
+    { "include": "#string" },
+    { "include": "#type-parametric" },
+    { "include": "#type-name" },
+    { "include": "#builtin-function" },
+    { "include": "#constant" },
+    { "include": "#number" },
+    { "include": "#operator" },
+    { "include": "#punctuation" },
+    { "include": "#identifier" }
+  ],
+  "repository": {
+    "comment": {
+      "patterns": [
+        { "name": "comment.line.double-dash.aria", "match": "--.*$" }
+      ]
+    },
+    "annotation": {
+      "patterns": [
+        {
+          "name": "meta.annotation.aria",
+          "match": "(@)(clock_freq|reset|enable|pragma|hint|target)\\b",
+          "captures": {
+            "1": { "name": "punctuation.definition.annotation.aria" },
+            "2": { "name": "storage.type.annotation.aria" }
+          }
+        },
+        {
+          "name": "meta.annotation.unknown.aria",
+          "match": "(@)([a-zA-Z_][a-zA-Z0-9_]*)",
+          "captures": {
+            "1": { "name": "punctuation.definition.annotation.aria" },
+            "2": { "name": "storage.type.annotation.aria" }
+          }
+        }
+      ]
+    },
+    "keyword": {
+      "patterns": [
+        { "name": "keyword.declaration.module.aria", "match": "\\b(module|pipeline|systolic|struct|enum)\\b" },
+        { "name": "storage.type.binding.aria",       "match": "\\b(const|let|var|fn)\\b" },
+        { "name": "keyword.control.flow.aria",       "match": "\\b(when|match|if|else|forall|in|stage)\\b" },
+        { "name": "keyword.other.stream.aria",       "match": "\\b(stream|fifo|approx|pe)\\b" },
+        { "name": "keyword.other.formal.aria",       "match": "\\b(assert|assume|cover)\\b" },
+        { "name": "keyword.other.temporal.aria",     "match": "\\b(always|never|eventually|next)\\b" },
+        { "name": "keyword.other.flow-direction.aria","match": "\\b(flow)\\s+(left|right|up|down|accumulate)\\b" },
+        { "name": "keyword.other.flow-direction.aria","match": "\\b(left|right|up|down|accumulate)\\b" }
+      ]
+    },
+    "string": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.aria",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            { "name": "constant.character.escape.aria", "match": "\\\\." }
+          ]
+        }
+      ]
+    },
+    "type-parametric": {
+      "patterns": [
+        {
+          "comment": "Parameterized types: int<N>, fix<W,I>, stream<T>, etc.",
+          "match": "\\b(int|uint|bits|fix|ufix|float|mx|stream)\\b(?=\\s*<)",
+          "name": "entity.name.type.parametric.aria"
+        }
+      ]
+    },
+    "type-name": {
+      "patterns": [
+        {
+          "comment": "Concrete float / scalar types.",
+          "name": "entity.name.type.builtin.aria",
+          "match": "\\b(fp64|fp32|fp16|bf16|fp8e4m3|fp8e5m2|bit)\\b"
+        },
+        {
+          "comment": "Type annotation `name : Type`.",
+          "match": "(:)\\s*([a-zA-Z_][a-zA-Z0-9_]*)",
+          "captures": {
+            "1": { "name": "punctuation.separator.type.aria" },
+            "2": { "name": "entity.name.type.aria" }
+          }
+        }
+      ]
+    },
+    "builtin-function": {
+      "patterns": [
+        { "name": "support.function.builtin.aria", "match": "\\b(sin|cos|tan|sqrt|exp|log|abs|floor|ceil|min|max|read|write)\\b(?=\\s*\\()" }
+      ]
+    },
+    "constant": {
+      "patterns": [
+        { "name": "constant.language.boolean.aria", "match": "\\b(true|false)\\b" }
+      ]
+    },
+    "number": {
+      "patterns": [
+        { "name": "constant.numeric.hex.aria",     "match": "\\b0x[0-9a-fA-F][0-9a-fA-F_]*\\b" },
+        { "name": "constant.numeric.float.aria",   "match": "\\b[0-9][0-9_]*\\.[0-9][0-9_]*([eE][+\\-]?[0-9]+)?\\b" },
+        { "name": "constant.numeric.integer.aria", "match": "\\b[0-9][0-9_]*([eE][+\\-]?[0-9]+)?\\b" }
+      ]
+    },
+    "operator": {
+      "patterns": [
+        { "name": "keyword.operator.pipe.aria",       "match": "\\|>" },
+        { "name": "keyword.operator.update.aria",     "match": ":=" },
+        { "name": "keyword.operator.arrow.aria",      "match": "->" },
+        { "name": "keyword.operator.range.aria",      "match": "\\.\\." },
+        { "name": "keyword.operator.logical.aria",    "match": "&&|\\|\\||!" },
+        { "name": "keyword.operator.comparison.aria", "match": "==|!=|<=|>=|<|>" },
+        { "name": "keyword.operator.assignment.aria", "match": "=" },
+        { "name": "keyword.operator.arithmetic.aria", "match": "\\+|\\-|\\*|/|\\^|%" }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        { "name": "punctuation.section.brace.aria",       "match": "[{}]" },
+        { "name": "punctuation.section.bracket.aria",     "match": "[\\[\\]]" },
+        { "name": "punctuation.section.paren.aria",       "match": "[()]" },
+        { "name": "punctuation.section.angle.aria",       "match": "[<>](?![=<>])" },
+        { "name": "punctuation.separator.comma.aria",     "match": "," },
+        { "name": "punctuation.terminator.semicolon.aria","match": ";" }
+      ]
+    },
+    "identifier": {
+      "patterns": [
+        {
+          "comment": "Module/pipeline/systolic name in declaration position.",
+          "match": "\\b(module|pipeline|systolic|struct|enum)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+          "captures": {
+            "1": { "name": "keyword.declaration.module.aria" },
+            "2": { "name": "entity.name.type.module.aria" }
+          }
+        },
+        { "name": "entity.name.function.call.aria", "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*(?=\\s*\\()" },
+        { "name": "variable.other.aria",            "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b" }
+      ]
+    }
+  }
+}

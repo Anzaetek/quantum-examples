@@ -1,0 +1,138 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Aria (fin)",
+  "scopeName": "source.aria.fin",
+  "fileTypes": ["aria", "fs"],
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#keyword" },
+    { "include": "#string" },
+    { "include": "#date" },
+    { "include": "#combinator" },
+    { "include": "#barrier-direction" },
+    { "include": "#builtin-function" },
+    { "include": "#constant" },
+    { "include": "#number" },
+    { "include": "#type-name" },
+    { "include": "#operator" },
+    { "include": "#punctuation" },
+    { "include": "#identifier" }
+  ],
+  "repository": {
+    "comment": {
+      "patterns": [
+        { "name": "comment.line.double-dash.aria", "match": "--.*$" }
+      ]
+    },
+    "keyword": {
+      "patterns": [
+        { "name": "keyword.declaration.contract.aria", "match": "\\b(contract)\\b" },
+        { "name": "storage.type.binding.aria",         "match": "\\b(let|var)\\b" },
+        { "name": "keyword.control.flow.aria",         "match": "\\b(when|for|in|schedule|period)\\b" }
+      ]
+    },
+    "string": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.aria",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            { "name": "constant.character.escape.aria", "match": "\\\\." }
+          ]
+        }
+      ]
+    },
+    "date": {
+      "patterns": [
+        {
+          "comment": "ISO date YYYY-MM-DD.",
+          "name": "constant.other.date.aria",
+          "match": "\\b\\d{4}-\\d{2}-\\d{2}\\b"
+        }
+      ]
+    },
+    "combinator": {
+      "patterns": [
+        {
+          "comment": "Contract combinators.",
+          "name": "support.function.combinator.aria",
+          "match": "\\b(zero|one|give|and|or|scale|anytime|until|cond|cash_flow|on|barrier|terminate|autocall)\\b"
+        }
+      ]
+    },
+    "barrier-direction": {
+      "patterns": [
+        {
+          "name": "constant.language.barrier.aria",
+          "match": "\\b(up_in|up_out|down_in|down_out)\\b"
+        }
+      ]
+    },
+    "builtin-function": {
+      "patterns": [
+        {
+          "comment": "Market observation + statistical/math builtins (call sites only).",
+          "name": "support.function.builtin.aria",
+          "match": "\\b(spot|rate|fxrate|daycount|discount|max|min|abs|exp|log|running_max|running_min|prev|is_holiday|smooth_step|credit_event|survival|credit_leg|sum|prod|len)\\b(?=\\s*\\()"
+        }
+      ]
+    },
+    "constant": {
+      "patterns": [
+        { "name": "constant.language.boolean.aria", "match": "\\b(true|false)\\b" }
+      ]
+    },
+    "number": {
+      "patterns": [
+        { "name": "constant.numeric.float.aria",   "match": "\\b[0-9]+\\.[0-9]+([eE][+\\-]?[0-9]+)?\\b" },
+        { "name": "constant.numeric.integer.aria", "match": "\\b[0-9]+\\b" }
+      ]
+    },
+    "type-name": {
+      "patterns": [
+        {
+          "match": "(:)\\s*([a-zA-Z_][a-zA-Z0-9_]*)",
+          "captures": {
+            "1": { "name": "punctuation.separator.type.aria" },
+            "2": { "name": "entity.name.type.aria" }
+          }
+        }
+      ]
+    },
+    "operator": {
+      "patterns": [
+        { "name": "keyword.operator.pipe.aria",       "match": "\\|>" },
+        { "name": "keyword.operator.update.aria",     "match": ":=" },
+        { "name": "keyword.operator.range.aria",      "match": "\\.\\." },
+        { "name": "keyword.operator.logical.aria",    "match": "&&|\\|\\||!" },
+        { "name": "keyword.operator.comparison.aria", "match": "==|!=|<=|>=|<|>" },
+        { "name": "keyword.operator.assignment.aria", "match": "=" },
+        { "name": "keyword.operator.arithmetic.aria", "match": "\\+|\\-|\\*|/|\\^|%" }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        { "name": "punctuation.section.brace.aria",       "match": "[{}]" },
+        { "name": "punctuation.section.bracket.aria",     "match": "[\\[\\]]" },
+        { "name": "punctuation.section.paren.aria",       "match": "[()]" },
+        { "name": "punctuation.separator.comma.aria",     "match": "," },
+        { "name": "punctuation.terminator.semicolon.aria","match": ";" }
+      ]
+    },
+    "identifier": {
+      "patterns": [
+        {
+          "comment": "Contract name in declaration position.",
+          "match": "\\b(contract)\\s+([A-Z][a-zA-Z0-9_]*)",
+          "captures": {
+            "1": { "name": "keyword.declaration.contract.aria" },
+            "2": { "name": "entity.name.type.contract.aria" }
+          }
+        },
+        { "name": "entity.name.function.call.aria", "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*(?=\\s*\\()" },
+        { "name": "variable.other.aria",            "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b" }
+      ]
+    }
+  }
+}

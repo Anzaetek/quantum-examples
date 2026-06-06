@@ -1,0 +1,67 @@
+{
+  "name": "aria-multi",
+  "displayName": "Aria (multi-dialect)",
+  "description": "Syntax highlighting for the Aria DSL family — strategy (gpu-backtest), quantum, HDL (fpga-meta-compiler), and financial-contracts (Sibelius) dialects.",
+  "version": "0.1.0",
+  "publisher": "aria-toolkit",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": ["Programming Languages"],
+  "keywords": ["aria", "dsl", "strategy", "quantum", "hdl", "finance"],
+  "contributes": {
+    "languages": [
+      {
+        "id": "aria-strat",
+        "aliases": ["Aria (strat)", "aria-strat"],
+        "extensions": [".aria"],
+        "configuration": "./language-configuration-strat.json",
+        "firstLine": "^--\\s*aria:\\s*strat\\b"
+      },
+      {
+        "id": "aria-quantum",
+        "aliases": ["Aria (quantum)", "aria-quantum"],
+        "extensions": [".aria"],
+        "configuration": "./language-configuration-default.json",
+        "firstLine": "^--\\s*aria:\\s*quantum\\b"
+      },
+      {
+        "id": "aria-hdl",
+        "aliases": ["Aria (hdl)", "aria-hdl"],
+        "extensions": [".ahdl"],
+        "configuration": "./language-configuration-default.json",
+        "firstLine": "^--\\s*aria:\\s*hdl\\b"
+      },
+      {
+        "id": "aria-fin",
+        "aliases": ["Aria (fin)", "aria-fin"],
+        "extensions": [".aria", ".fs"],
+        "configuration": "./language-configuration-default.json",
+        "firstLine": "^--\\s*aria:\\s*fin\\b"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "aria-strat",
+        "scopeName": "source.aria.strat",
+        "path": "./syntaxes/aria-strat.tmLanguage.json"
+      },
+      {
+        "language": "aria-quantum",
+        "scopeName": "source.aria.quantum",
+        "path": "./syntaxes/aria-quantum.tmLanguage.json"
+      },
+      {
+        "language": "aria-hdl",
+        "scopeName": "source.aria.hdl",
+        "path": "./syntaxes/aria-hdl.tmLanguage.json"
+      },
+      {
+        "language": "aria-fin",
+        "scopeName": "source.aria.fin",
+        "path": "./syntaxes/aria-fin.tmLanguage.json"
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+-- GHZ state (|000> + |111>) / sqrt(2) — the minimal 3-qubit entangler.
+@assert unitary
+@bound gate_count = 3
+
+circuit GHZ {
+    qreg q[3]
+    creg c[3]
+
+    apply H on q[0]            -- superpose q[0]
+    apply CX on q[0], q[1]     -- entangle q[1]
+    apply CX on q[1], q[2]     -- entangle q[2]
+
+    measure q -> c
+}

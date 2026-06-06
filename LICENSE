@@ -1,0 +1,63 @@
+QUANTUM TOOLKIT — EVALUATION LICENSE AGREEMENT
+==============================================
+
+Copyright (c) 2026. All rights reserved.
+
+This repository contains EVALUATION-ONLY materials: time-limited, capability-
+limited binary builds of the Quantum Toolkit ("the Software") together with
+example code and documentation. By downloading, copying, installing, or using
+any part of it, you agree to the following terms.
+
+1. LIMITED EVALUATION LICENSE
+   You are granted a personal, non-exclusive, non-transferable, revocable license
+   to use the Software SOLELY to EVALUATE it for internal assessment purposes, for
+   the limited period during which the evaluation build remains valid (the build
+   is time-limited and stops running after its expiry).
+
+2. YOU MAY
+   - Run the provided binaries to test and evaluate the Software.
+   - Read, run, and modify the bundled EXAMPLE source (the `demo/` and `editors/`
+     trees and the tutorial) for the purpose of evaluation only.
+
+3. YOU MAY NOT
+   - Use the Software or any output of it in production or for any COMMERCIAL
+     purpose, or to provide a service to third parties.
+   - REDISTRIBUTE, publish, host, sublicense, sell, rent, or lease the Software
+     or these binaries, in whole or in part.
+   - REVERSE ENGINEER, decompile, disassemble, or otherwise attempt to derive
+     source code or the baked-in limits from the binaries, except to the extent
+     this restriction is expressly prohibited by applicable law.
+   - Remove, alter, or obscure any proprietary notices, the time limit, or the
+     capability (qubit) limit.
+   - Circumvent or disable the evaluation time limit or capability limits.
+
+4. NO OTHER RIGHTS
+   No rights are granted except those expressly stated here. The Software is
+   licensed, not sold. All intellectual property rights are reserved by the
+   copyright holder.
+
+5. EVALUATION BUILD CHARACTERISTICS
+   Evaluation builds are intentionally TIME-LIMITED (they expire) and
+   CAPABILITY-LIMITED (a maximum qubit count). These limits are part of the
+   licensed product; circumventing them terminates this license automatically.
+
+6. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+7. LIMITATION OF LIABILITY
+   IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR
+   OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR
+   ITS USE.
+
+8. TERMINATION
+   This license terminates automatically on expiry of the evaluation build, on
+   any breach of these terms, or on circumvention of the time/capability limits.
+   On termination you must stop using and delete all copies of the Software.
+
+9. COMMERCIAL USE
+   A separate COMMERCIAL LICENSE is required for any production, commercial, or
+   redistribution use. Contact the copyright holder to obtain one.
+
+This is an evaluation product: you can test it — that is all.
