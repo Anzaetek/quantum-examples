@@ -8,6 +8,15 @@ SOCK="$(mktemp -u /tmp/quantum-demo-XXXX.sock)"
 say "== Demo 03: standalone Rust harness ⇄ shipped quantum-server =="
 note "dist server: $QSERVER"
 
+# This demo shows integrating the shipped server into YOUR OWN Rust app, so it
+# compiles a small crate — the one demo that needs a Rust toolchain (the rest
+# run on the binaries alone). Skip cleanly when cargo isn't installed.
+if ! command -v cargo >/dev/null 2>&1; then
+    note "  (skip) this demo builds a Rust client crate and needs cargo (not on this host)."
+    note "         The shipped quantum-client binary speaks the same JSON-RPC with no toolchain."
+    exit 0
+fi
+
 "$QSERVER" --listen "unix:$SOCK" >/dev/null 2>&1 &
 SRV=$!
 trap 'kill $SRV 2>/dev/null || true; rm -f "$SOCK"' EXIT

@@ -1,0 +1,35 @@
+-- Trotterized 1-D transverse-field Ising on 6 qubits, 4 Trotter steps.
+-- Hamiltonian  H = -J Σ_i Z_i Z_{i+1}  -  h Σ_i X_i   (J = 0.30, h = 0.20).
+--
+-- Each Trotter step applies the two non-commuting pieces in sequence:
+--   * ZZ couplings   exp(-i J Z_i Z_{i+1})   as the gadget  CX · RZ(2J) · CX,
+--   * transverse field exp(-i h X_i)          as            RX(2h).
+--
+-- This is the non-Clifford regime Pauli propagation targets. `quantum expect
+-- --backend pauliprop` reads ⟨Z_i⟩ in the Heisenberg picture — exact (matches
+-- the dense statevector bit-for-bit) — and a coefficient-truncated run
+-- (`--truncate C`) approximates it within a reported dropped-mass budget.
+-- Rust/QASM twin: demo/13-pauliprop/trotter_ising.qasm.
+
+@assert unitary
+@bound qubits = 6               -- a 6-site chain (statevector still feasible to check)
+
+circuit TrotterIsing {
+    qreg q[6]
+
+    let J = 0.30                -- Ising coupling
+    let h = 0.20                -- transverse field
+
+    repeat t from 0 to 3 {              -- 4 Trotter steps
+        -- ZZ couplings along the chain: CX · RZ(2J) · CX on each bond.
+        repeat b from 0 to 4 {
+            apply CX on q[b], q[b + 1]
+            apply RZ(2 * J) on q[b + 1]
+            apply CX on q[b], q[b + 1]
+        }
+        -- Transverse X field on every site.
+        repeat s from 0 to 5 {
+            apply RX(2 * h) on q[s]
+        }
+    }
+}

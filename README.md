@@ -5,7 +5,7 @@
 # Quantum Toolkit — Evaluation Examples
 
 **A pure-Rust quantum programming toolkit — circuits, optimization, QML, photonics, MBQC/blind
-computing, and Lean 4 proofs — that you can try, on real binaries, in five minutes. (WIP) **
+computing, and Lean 4 proofs — that you can try, on real binaries, in five minutes.**
 
 ![evaluation](https://img.shields.io/badge/license-evaluation%20only-7c5cff)
 ![status](https://img.shields.io/badge/status-work%20in%20progress-f59e0b)
@@ -38,7 +38,7 @@ computing, and Lean 4 proofs — that you can try, on real binaries, in five min
 ```
 quantum-examples/
 ├── dist/            time-limited, qubit-capped binaries, per platform (see below)
-├── demo/            11 runnable example subfolders (Aria/QASM models + harnesses)
+├── demo/            13 runnable example subfolders (Aria/QASM models + harnesses)
 ├── editors/         Aria syntax highlighting (VS Code · Neovim · tree-sitter)
 ├── docs/
 │   └── aria-tutorial.md   learn the Aria quantum language
@@ -86,7 +86,7 @@ docker run --rm --platform linux/amd64 -v "$PWD":/qx:ro debian:bookworm-slim bas
 > The optional `clients/client.sh` shell helper auto-delegates to that binary; it only falls back to
 > `python3`/`jq` in a bare source checkout where the binary isn't present.
 
-## The 11 demos (each runs against the binaries)
+## The 13 demos (each runs against the binaries)
 
 | # | Folder | Shows |
 |---|--------|-------|
@@ -101,6 +101,14 @@ docker run --rm --platform linux/amd64 -v "$PWD":/qx:ro debian:bookworm-slim bas
 | 09 | `demo/09-mbqc` | compile a circuit to a one-way **measurement pattern** |
 | 10 | `demo/10-ubqc` | **blind** quantum computation on a remote server |
 | 11 | `demo/11-lean4` | export Aria models to **Lean 4** theorems (+ MBQC certificate) |
+| 12 | `demo/12-ecc` | **surface-code error correction** — `[[9,1,3]]`/`[[25,1,5]]`/`[[49,1,7]]` syndrome + MWPM decode across 4 simulator backends; d=7 via Pauli propagation |
+| 13 | `demo/13-pauliprop` | **Pauli propagation** — `quantum expect` reads `⟨O⟩` via a Heisenberg Pauli-string tree: exact non-Clifford cross-check, a truncation budget, and a 24-qubit GHZ where the dense statevector can't fit |
+
+> Demos 12–13 (`ecc`, `expect`) run on the **macOS** bundle (native `omega-sim`
+> backends). On the cross-built **Linux** bundles those backends ship inert, so demos
+> 12–13 **skip cleanly** (build natively for them). Demo 03 builds a small Rust client
+> crate and skips when `cargo` isn't installed; the other demos need only the shipped
+> binaries.
 
 > All finance/QML data is **synthetic** (a rescaled, noised, renamed series — *not* real market
 > data); see `demo/data/README.md`.
@@ -120,7 +128,8 @@ Evaluation bundles are provided per platform in `dist/`:
 The `quantum` / `quantum-server` / `quantum-client` CLIs are libtorch-free and portable (the Linux
 CPU bundles ship these); the QML/finance binary ships where a paired libtorch runtime is available
 (macOS bundle, and the Linux+CUDA build). **Every binary is time-limited** (it expires) and the CLI
-is **qubit-capped**.
+is **qubit-capped** — 12 qubits for general circuits, with a separate 64-qubit ceiling for the
+scalable `quantum ecc` / `quantum expect` (Pauli-propagation) paths (see `TEST-BUILD.txt`).
 
 ## Aria — the quantum language
 

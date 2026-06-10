@@ -1,0 +1,42 @@
+-- Rotated surface code [[9,1,3]] — bit-flip sector (Z-check syndrome).
+-- One logical qubit protected by 9 physical data qubits on a 3x3 grid
+-- (data index = row*3 + col). Four Z-type stabilizer checks detect X
+-- (bit-flip) errors; the dual four X-type checks (not shown here) detect Z
+-- errors. A distance-3 code corrects any single-qubit error.
+--
+-- Here we inject one X error on the centre qubit and extract the Z-check
+-- syndrome. The error flips exactly the checks whose support contains qubit 4
+-- (checks 0 and 1) -> syndrome 1,1,0,0, which minimum-weight decoding maps
+-- straight back to "X on qubit 4". The `quantum ecc` command runs this on the
+-- statevector, stabilizer and MPS simulators and they all agree bit-for-bit.
+
+@bound gate_count = 13          -- 1 injected X + 12 stabilizer CNOTs
+
+circuit SurfaceBitflip {
+    qreg q[13]                  -- 9 data (0..8) + 4 Z-ancilla (9..12)
+    creg s[4]                   -- 4 Z-check syndrome bits
+
+    apply X on q[4]             -- injected bit-flip error on the centre qubit
+
+    -- Z-check 0  (plaquette, data {0,1,3,4})
+    apply CX on q[0], q[9]
+    apply CX on q[1], q[9]
+    apply CX on q[3], q[9]
+    apply CX on q[4], q[9]
+
+    -- Z-check 1  (plaquette, data {4,5,7,8})
+    apply CX on q[4], q[10]
+    apply CX on q[5], q[10]
+    apply CX on q[7], q[10]
+    apply CX on q[8], q[10]
+
+    -- Z-check 2  (boundary, data {1,2})
+    apply CX on q[1], q[11]
+    apply CX on q[2], q[11]
+
+    -- Z-check 3  (boundary, data {6,7})
+    apply CX on q[6], q[12]
+    apply CX on q[7], q[12]
+
+    measure q -> s              -- read the four syndrome ancillas
+}
