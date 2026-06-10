@@ -29,7 +29,7 @@ below resolves the binaries through `$QUANTUM_DIST` (see `common.sh`).
 | [`05-optimizer/`](05-optimizer/) | GHZ (Aria + QASM) | shell | A **real optimizer reduction** — a naive 7-gate GHZ collapses to the minimal 3 gates |
 | [`06-finance/`](06-finance/) | **synthetic** daily series | shell | **Trading pipeline** on `quantum-finance`: HMM regimes + backtest vs buy-and-hold (data is synthetic, see [`data/`](data/)) |
 | [`07-qml-qcbm/`](07-qml-qcbm/) | `qcbm.aria` | shell | **QML** — a Quantum Circuit Born Machine model, trained (KL→0) via the binary |
-| [`08-qml-classifier/`](08-qml-classifier/) | `classifier.aria` | shell | **QML** — a variational quantum **classifier** model, trained as a QNN (val≈0.80) |
+| [`08-qml-classifier/`](08-qml-classifier/) | `classifier.aria` | shell | **QML** — a variational quantum **classifier** model, trained as a QNN (val≈0.80); on a CUDA host with a **gpu bundle**, also trains the DNN head on `Cuda(0)` |
 | [`09-mbqc/`](09-mbqc/) | `mbqc_bell.aria` | shell | **MBQC** — compile a circuit to a one-way measurement pattern, optimize + simulate |
 | [`10-ubqc/`](10-ubqc/) | — | shell | **Blind QC** (UBQC/BFK) — run a pattern on a remote server that stays blind |
 | [`11-lean4/`](11-lean4/) | bundled `.aria` | shell | **Lean 4 extraction** — export Aria models to Lean 4 theorems (+ MBQC certificate) |
@@ -38,6 +38,9 @@ below resolves the binaries through `$QUANTUM_DIST` (see `common.sh`).
 
 > Demos 06–08 need the **libtorch runtime** (`export LIBTORCH=/path/to/libtorch`); they skip cleanly
 > without it. Demos 01–05 + the Rust harness need only the toolkit binaries.
+> A **gpu bundle** (`linux-amd64-gpu`) pairs with the **cu128 libtorch 2.7.0**
+> (its `quantum-finance` force-links `libtorch_cuda.so`); demo 08 then proves the
+> GPU path numerically — `device Cuda(0)` + val-accuracy floor.
 
 ## How to check the quantum circuits used
 
