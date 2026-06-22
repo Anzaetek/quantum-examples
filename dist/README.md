@@ -12,6 +12,7 @@ Provided here:
 | Bundle | Platform | Contents |
 |---|---|---|
 | `mac-cpu-test` | macOS Apple-Silicon | core CLIs **+ QML/finance** |
+| `mac-metal-test` | macOS Apple-Silicon + Metal | core CLIs, **+ QML/finance with Metal** — `quantum-finance` links the Metal libtorch, `--device metal` trains on the Apple GPU (`Mps`) |
 | `linux-amd64-cpu-test` | Linux x86-64 | core CLIs, live `ecc`/`expect` backends (built natively on the Linux box) |
 | `linux-amd64-gpu-test` | Linux x86-64 + NVIDIA | core CLIs, live `ecc`/`expect`, **+ QML/finance with CUDA** — `quantum-finance` links `libtorch_cuda.so`, `--device cuda` trains on `Cuda(0)` |
 | `linux-arm64-cpu-test` | Linux arm64 | core CLIs (reproducibly cross-built; `ecc`/`expect` inert) |
