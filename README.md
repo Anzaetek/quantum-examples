@@ -25,12 +25,16 @@ computing, and Lean 4 proofs — that you can try, on real binaries, in five min
 > commercial, or redistribution use — see [LICENSE](./LICENSE). A commercial license is available
 > separately.
 
-> 🚧 **Work in progress.** This evaluation bundle is early and moving fast. The macOS bundle and
+> 🚧 **Work in progress.** This evaluation bundle is early and moving fast. The macOS bundles and
 > the Linux **`linux-amd64-gpu`** (CUDA) bundle are the complete tour (incl. QML/finance — the GPU
-> bundle trains on `Cuda(0)` through the shipped binary); the Linux **CPU-only** bundles ship the
-> libtorch-free CLIs (`quantum` / `quantum-server` / `quantum-client`) and therefore **skip the
-> ML/finance demos** (06–08) — those need a paired libtorch runtime (macOS bundle, or the GPU
-> bundle + cu128 libtorch). RISC-V is still ⏳. Expect rough edges.
+> bundle trains on `Cuda(0)` through the shipped binary). The Linux **CPU-only** bundles now run
+> the full quantum tour, **including live error correction and Pauli propagation** (demos 12–14);
+> they skip only the ML/finance demos (06–08), which need a paired libtorch runtime. RISC-V is
+> still ⏳. Expect rough edges.
+
+> 📊 **[`docs/RESULTS.md`](./docs/RESULTS.md)** — what these bundles show numerically, beside what
+> the unrestricted build does (code distances, circuit widths, shot floors), and a straight
+> statement of what the numbers do and do not claim.
 
 ---
 

@@ -6,7 +6,8 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 RC=0
 for d in 01-bell/inspect.sh 02-qft/inspect.sh 03-rust-harness/run.sh 04-qos/run.sh \
          05-optimizer/inspect.sh 06-finance/run.sh 07-qml-qcbm/run.sh 08-qml-classifier/run.sh \
-         09-mbqc/run.sh 10-ubqc/run.sh 11-lean4/run.sh 12-ecc/run.sh 13-pauliprop/run.sh; do
+         09-mbqc/run.sh 10-ubqc/run.sh 11-lean4/run.sh 12-ecc/run.sh 13-pauliprop/run.sh \
+         14-logical/run.sh; do
     echo; echo "════════════════════════════════════════════════════════════"
     bash "$HERE/$d" || RC=1
 done
