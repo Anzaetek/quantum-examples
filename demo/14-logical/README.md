@@ -82,8 +82,12 @@ export QUANTUM_DIST="$(ls -d /tmp/qdist/dist-*)"   # a build-dist.sh tarball roo
 ./run.sh
 ```
 
-Requires a native dist (the `omega-sim` simulator backends). A cross-built Linux
-core-CLI bundle ships `quantum logical` inert and the demo skips cleanly.
+Requires a dist built with the `omega-sim` simulator backends — which every
+shipped CPU bundle now is, **including the cross-built Linux ones**. Measured at
+`8426b18` in a stock `debian:bookworm-slim` container: 13 checks passed on
+`linux/amd64` and on `linux/arm64` alike. (Earlier revisions shipped `quantum
+logical` inert on the cross-built bundles and this demo skipped there; that was a
+mount gap in the cross build, fixed in 16e E3a/E3c.)
 
 The Rust twins are the `logical::` unit tests:
 `cargo test -p quantum-core --features omega-sim --lib logical::`.

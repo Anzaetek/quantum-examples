@@ -91,7 +91,7 @@ docker run --rm --platform linux/amd64 -v "$PWD":/qx:ro debian:bookworm-slim bas
 > The optional `clients/client.sh` shell helper auto-delegates to that binary; it only falls back to
 > `python3`/`jq` in a bare source checkout where the binary isn't present.
 
-## The 13 demos (each runs against the binaries)
+## The 14 demos (each runs against the binaries)
 
 | # | Folder | Shows |
 |---|--------|-------|
@@ -108,11 +108,18 @@ docker run --rm --platform linux/amd64 -v "$PWD":/qx:ro debian:bookworm-slim bas
 | 11 | `demo/11-lean4` | export Aria models to **Lean 4** theorems (+ MBQC certificate) |
 | 12 | `demo/12-ecc` | **surface-code error correction** — `[[9,1,3]]`/`[[25,1,5]]`/`[[49,1,7]]` syndrome + MWPM decode across 4 simulator backends; d=7 via Pauli propagation |
 | 13 | `demo/13-pauliprop` | **Pauli propagation** — `quantum expect` reads `⟨O⟩` via a Heisenberg Pauli-string tree: exact non-Clifford cross-check, a truncation budget, and a 24-qubit GHZ where the dense statevector can't fit |
+| 14 | `demo/14-logical` | **Transversal QEC** — `quantum logical` runs algorithms on ENCODED qubits: Grover on Steane `[[7,1,3]]` and the 6.6.6 colour code (d=3/5/7), logical QFT/QPE, `[[15,1,3]]` magic-state distillation, and surface-code memory scaling. Cross-checked across 4 exact backends |
 
-> Demos 12–13 (`ecc`, `expect`) run on the **macOS** bundle and on the **Linux x86-64**
-> bundles (both `-cpu` and `-gpu`), which are now built natively on the Linux box with the
-> `omega-sim` backends live. The cross-built **arm64** bundle ships those backends inert, so
-> demos 12–13 **skip cleanly** there. Demo 03 builds a small Rust client crate and skips when
+> Demos 12–14 (`ecc`, `expect`, `logical`) run **live on every CPU bundle** — macOS, Linux
+> x86-64 **and** Linux arm64 — with the `omega-sim` backends compiled in. Measured at
+> `8426b18` in a stock `debian:bookworm-slim` container: **19 / 8 / 13 checks** and
+> `ALL DEMOS PASSED` on `linux/amd64` and `linux/arm64` alike. (An earlier revision did ship
+> those backends inert on the cross-built arm64 bundle. That was a mount gap in the cross
+> build, fixed in 16e E3a/E3c — never a portability limit.)
+
+> Demos 06–08 need the **libtorch runtime** and `bin/quantum-finance`, which ships in the
+> **macOS** bundles only: libtorch cannot be cross-compiled, so the Linux bundles omit it and
+> these three skip cleanly there. Demo 03 builds a small Rust client crate and skips when
 > `cargo` isn't installed; the other demos need only the shipped binaries.
 
 > All finance/QML data is **synthetic** (a rescaled, noised, renamed series — *not* real market

@@ -35,6 +35,7 @@ below resolves the binaries through `$QUANTUM_DIST` (see `common.sh`).
 | [`11-lean4/`](11-lean4/) | bundled `.aria` | shell | **Lean 4 extraction** — export Aria models to Lean 4 theorems (+ MBQC certificate) |
 | [`12-ecc/`](12-ecc/) | `surface.aria` | shell | **Error correction** — rotated surface code `[[9,1,3]]`/`[[25,1,5]]`, multi-backend syndrome + MWPM decode; d=5 on the RAM-safe stabilizer/MPS backends |
 | [`13-pauliprop/`](13-pauliprop/) | `trotter_ising.aria` | shell | **Pauli propagation** — `quantum expect` reads `⟨O⟩` via a Heisenberg Pauli-string tree; Aria→Lean model, exact non-Clifford cross-check, certified truncation-error curve, 24-qubit GHZ where the statevector can't fit |
+| [`14-logical/`](14-logical/) | — (built-in codes, no model file) | shell | **Transversal QEC** — `quantum logical` runs algorithms on ENCODED qubits: Grover on Steane `[[7,1,3]]` and the 6.6.6 colour code (d=3/5/7), logical QFT/QPE, `[[15,1,3]]` magic-state distillation, and surface-code memory scaling. Cross-checked across 4 exact backends |
 
 > Demos 06–08 need the **libtorch runtime** (`export LIBTORCH=/path/to/libtorch`); they skip cleanly
 > without it. Demos 01–05 + the Rust harness need only the toolkit binaries.
