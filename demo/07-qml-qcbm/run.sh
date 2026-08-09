@@ -19,6 +19,13 @@ rm -rf "$OUT"
 say "\n3) Train the QCBM on copula innovations (quantum-finance qcbm):"
 require_libtorch
 QCBM="$("$QF" qcbm 2>/dev/null)"; echo "$QCBM" | grep -E "^(rho|K|final_kl) " | sed 's/^/    /'
-echo "$QCBM" | grep -q "^final_kl 0.000000$" && ok "Born machine converges, KL → 0 (learns the distribution)" || bad "final_kl"
+# `final_kl` is `final_loss - target_entropy` = KL(p_target || p_model) against
+# the histogram the model was just trained on: a TRAINING loss, so this
+# certifies the ansatz can EXPRESS the target, not that it generalises. The
+# claim used to read "learns the distribution", which it does not support --
+# the trained model reproduces the fitted histogram to 4e-4 and carries no
+# information beyond it. It is still a real bar: a depth-1 ansatz leaves
+# final_kl 0.309745, well over it (see qcbm.rs residual_kl_is_capacity_sensitive).
+echo "$QCBM" | grep -q "^final_kl 0.000000$" && ok "Born machine expresses the target histogram, KL → 0 (expressivity, not generalisation)" || bad "final_kl"
 
 finish
