@@ -10,10 +10,15 @@ note "dist: $QUANTUM_DIST_ROOT  ·  data: SYNTHETIC ($SYNTH)"
 say "\n1) The QML model (Aria — angle-encoded variational classifier):"
 sed -n '/^circuit/,/^}/p' "$HERE/classifier.aria" | sed 's/^/    /'
 
-say "\n2) Export the QML circuit to Lean 4 (binary-only):"
+say "\n2) Lean 4 export of the UNTRAINED classifier is refused (binary-only):"
+# The 9 angles are `symbolic[3*L]` until training binds them; an export that
+# substituted 0.0 would certify the identity circuit, not the classifier.
 OUT="$(mktemp -d)"
-"$QBIN" spec extract --aria "$HERE/classifier.aria" --instantiate "QMLClassifier(L=3)" --out "$OUT" >/dev/null 2>&1
-ls "$OUT"/*.lean >/dev/null 2>&1 && ok "classifier circuit → Lean 4 theorem emitted" || bad "Lean export"
+ERR="$("$QBIN" spec extract --aria "$HERE/classifier.aria" --instantiate "QMLClassifier(L=3)" --out "$OUT" 2>&1 >/dev/null)"; RC=$?
+if [ "$RC" -ne 0 ] && echo "$ERR" | grep -q "9 parameter(s) have no bound numeric value: theta_0," \
+   && ! ls "$OUT"/*.lean >/dev/null 2>&1; then
+    ok "untrained classifier (9 symbolic angles) → export REFUSED by name, no .lean written"
+else bad "Lean export gate (rc=$RC)"; fi
 rm -rf "$OUT"
 
 say "\n3) Label the synthetic series (HMM) then train a QNN classifier on it:"

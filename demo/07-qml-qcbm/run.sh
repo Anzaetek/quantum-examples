@@ -10,10 +10,16 @@ note "dist: $QUANTUM_DIST_ROOT"
 say "\n1) The QML model (Aria — strongly-entangling Born machine):"
 sed -n '/^circuit/,/^}/p' "$HERE/qcbm.aria" | sed 's/^/    /'
 
-say "\n2) Export the QML circuit to a Lean 4 theorem (binary-only):"
+say "\n2) Lean 4 export of the UNTRAINED model is refused (binary-only):"
+# The 24 angles are `symbolic[3*N*L]` until training binds them. Substituting
+# 0.0 would state a theorem about the identity circuit, not the model, so the
+# exporter refuses by name and writes nothing (ci stage 11f′ tests the same).
 OUT="$(mktemp -d)"
-"$QBIN" spec extract --aria "$HERE/qcbm.aria" --instantiate "QcbmStronglyEntangling(N=4,L=2)" --out "$OUT" >/dev/null 2>&1
-ls "$OUT"/*.lean >/dev/null 2>&1 && ok "QCBM circuit → Lean 4 theorem emitted" || bad "Lean export"
+ERR="$("$QBIN" spec extract --aria "$HERE/qcbm.aria" --instantiate "QcbmStronglyEntangling(N=4,L=2)" --out "$OUT" 2>&1 >/dev/null)"; RC=$?
+if [ "$RC" -ne 0 ] && echo "$ERR" | grep -q "24 parameter(s) have no bound numeric value: theta_0," \
+   && ! ls "$OUT"/*.lean >/dev/null 2>&1; then
+    ok "untrained QCBM (24 symbolic angles) → export REFUSED by name, no .lean written"
+else bad "Lean export gate (rc=$RC)"; fi
 rm -rf "$OUT"
 
 say "\n3) Train the QCBM on copula innovations (quantum-finance qcbm):"
