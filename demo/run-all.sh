@@ -20,6 +20,9 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 # Minimum "OK — N" per demo when it runs to completion (mac + Linux/CUDA,
 # 2026-08-29). 08 reports 3 on a CUDA host (extra GPU-DNN check); the floor is
 # the CPU shape. Raising a demo's check count is fine; losing one is a failure.
+# 14 reports 15 against a binary built from HEAD and 13 against an older dist
+# (its §5d needs `logical precision --method circuit`, added 2026-09-03, and
+# skips without it) — so the floor STAYS 13 rather than tracking the new count.
 # (case functions, not `declare -A`: macOS ships bash 3.2 and customers run
 # this with it.)
 min_checks() {

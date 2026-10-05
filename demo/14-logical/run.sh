@@ -250,6 +250,68 @@ elif [ "$PR_OK" = "0" ]; then
     bad "the noise→precision through-line did not behave"
 fi
 
+say "\n5d) The same chain with PER-GADGET circuit noise (--method circuit):"
+note "    5c applies the residual logical rate ONCE, at readout. Every algorithm"
+note "    there has a delta ideal, so its metric collapses to 1-(1-b)^n and qft"
+note "    and qpe of equal width return the SAME number — that path restates the"
+note "    memory rate and nothing more. Here the noise is applied at every"
+note "    logical gadget and PROPAGATES through the rest of the circuit (a fault"
+note "    before a CX flips two readout bits; one before an Rz(θ) conjugates to"
+note "    Rz(-θ)), so depth and connectivity move the answer. The check is that"
+note "    qft and qpe, both width 3, now DISAGREE — and that the crossover still"
+note "    goes both ways."
+PCQ="$("$QBIN" logical precision --method circuit --algo qft --distance 3 \
+        --p 0.02 --shots 400 --seed 99 2>/dev/null)"
+PCP="$("$QBIN" logical precision --method circuit --algo qpe --distance 3 \
+        --p 0.02 --shots 400 --seed 99 2>/dev/null)"
+if [ -z "$PCQ" ] || [ -z "$PCP" ]; then
+    note "  (skip) this dist's quantum has no 'logical precision --method circuit'"
+else
+    PC_OK=1
+    QEE="$(val "$PCQ" error_encoded)"; QEU="$(val "$PCQ" error_unencoded)"
+    QCF="$(val "$PCQ" clean_frac_encoded)"; QEX="$(val "$PCQ" exposures)"
+    PEE="$(val "$PCP" error_encoded)"; PEU="$(val "$PCP" error_unencoded)"
+    PCF="$(val "$PCP" clean_frac_encoded)"; PEX="$(val "$PCP" exposures)"
+    have "$QEE" "$QEU" "$QCF" "$QEX" "$PEE" "$PEU" "$PCF" "$PEX" \
+        || { bad "circuit-precision output missing fields"; PC_OK=0; }
+    if [ "$PC_OK" = "1" ]; then
+        printf '    qft  exposures %s  encoded %s vs unencoded %s (clean %s)\n' \
+            "$QEX" "$QEE" "$QEU" "$QCF"
+        printf '    qpe  exposures %s  encoded %s vs unencoded %s (clean %s)\n' \
+            "$PEX" "$PEE" "$PEU" "$PCF"
+        # Encoding wins, the run resolved something (encoded error is not a
+        # shot-floor zero and not every shot was fault-free), and the two
+        # algorithms disagree — which the readout-flip path cannot produce.
+        lt "$QEE" "$QEU" || PC_OK=0
+        lt "$PEE" "$PEU" || PC_OK=0
+        awk -v a="$QEE" -v b="$PEE" 'BEGIN{exit !(a>0.01 && b>0.01)}' || PC_OK=0
+        lt "$QCF" "1" || PC_OK=0
+        lt "$PCF" "1" || PC_OK=0
+        awk -v a="$QEE" -v b="$PEE" 'BEGIN{d=a-b; if(d<0)d=-d; exit !(d>0.01)}' || PC_OK=0
+    fi
+    if [ "$PC_OK" = "1" ]; then
+        ok "circuit-level precision: qft ≠ qpe at equal width, encoding wins below threshold"
+    else
+        bad "circuit-level precision did not behave below threshold"
+    fi
+    # THE FALSIFIER, at the one p where it is testable: at 0.15 the per-round
+    # rates have genuinely crossed (pL 0.083-0.087 across seeds/shots vs p_bit
+    # 0.075) AND the bare run is still under this metric's own 0.75 ceiling.
+    # Stable there: encoding_helped reads 0 for 20/20 seeds. At 0.10 the rates
+    # have NOT crossed (0.0465 vs 0.05) even though the verdict already reads 0
+    # — the metric saturates first, so a pass would not be about the crossover.
+    # At 0.25 both sides sit on the ceiling and the verdict flips with the seed.
+    PCH="$("$QBIN" logical precision --method circuit --algo grover --distance 3 \
+            --p 0.15 --shots 2000 --seed 99 2>/dev/null)"
+    HEU="$(val "$PCH" error_unencoded)"
+    printf '    above the crossover (p=0.15): %s\n' "$(echo "$PCH" | tail -1)"
+    if have "$HEU" && echo "$PCH" | grep -q "encoding_helped 0" && lt "$HEU" "0.72"; then
+        ok "circuit-level falsifier: encoding stops helping at p=0.15, unsaturated"
+    else
+        bad "circuit-level crossover did not reverse (or both sides saturated)"
+    fi
+fi
+
 say "\n6) Extracted effective logical channel is ZZ-biased (neutral-atom):"
 echo "$M5" | sed 's/^/    /'
 PLX="$(val "$M5" p_lx)"; PLZ="$(val "$M5" p_lz)"

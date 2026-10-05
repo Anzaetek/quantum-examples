@@ -12,10 +12,29 @@ resolve_dist() {
     if [ -n "${QUANTUM_DIST:-}" ] && [ -x "${QUANTUM_DIST}/bin/quantum" ]; then
         echo "$QUANTUM_DIST"; return 0
     fi
-    # Fallback: newest extracted dist under /tmp/qdist or the repo dist/ tarball.
-    local cand
-    cand=$(ls -d /tmp/qdist/dist-* 2>/dev/null | head -1)
-    if [ -n "$cand" ] && [ -x "$cand/bin/quantum" ]; then echo "$cand"; return 0; fi
+    # Fallback: newest extracted dist under /tmp/qdist.
+    #
+    # `ls -dt`, not `ls -d`: without -t this sorted ALPHABETICALLY while the
+    # comment promised "newest", so with two extracted bundles it silently
+    # picked by name. Combined with a stale bundle that is the whole
+    # wrong-artefact hazard — a run that answers for a sha nobody chose.
+    local cand n
+    n=$(ls -d /tmp/qdist/dist-* 2>/dev/null | wc -l)
+    cand=$(ls -dt /tmp/qdist/dist-* 2>/dev/null | head -1)
+    if [ -n "$cand" ] && [ -x "$cand/bin/quantum" ]; then
+        # Ambiguity is reported, not resolved silently. The chosen bundle's
+        # git_sha goes in the notice, not just the count: a sha is actionable
+        # (you can tell at a glance whether it is the build you meant), a count
+        # is not. Strictly the ambiguous case -- one candidate, or an explicit
+        # QUANTUM_DIST, says nothing at all.
+        if [ "$n" -gt 1 ]; then
+            local csha
+            csha=$(awk '/^git_sha:/{print $2}' "$cand/MANIFEST.txt" 2>/dev/null)
+            echo "auto-selected newest of $n extracted dists: $cand (git_sha ${csha:-unknown})" >&2
+            echo "  (set QUANTUM_DIST to choose explicitly)" >&2
+        fi
+        echo "$cand"; return 0
+    fi
     echo "" ; return 1
 }
 
@@ -24,7 +43,12 @@ if [ -z "$QUANTUM_DIST_ROOT" ]; then
     echo -e "${RED}No distribution found.${NC} Build + extract one, then export QUANTUM_DIST:" >&2
     echo '  QUANTUM_DIST=1 ./scripts/release/build-dist.sh cpu' >&2
     echo '  mkdir -p /tmp/qdist && tar xzf dist/quantum-dist-*.tar.gz -C /tmp/qdist' >&2
-    echo '  export QUANTUM_DIST="$(ls -d /tmp/qdist/dist-*)"' >&2
+    # `ls -dt ... | head -1`, not `ls -d ...`: in the very multi-bundle case
+    # the picker above handles, the bare glob expands to SEVERAL paths and
+    # this guidance would set a broken space-separated QUANTUM_DIST. The
+    # instructions for setting it manually were wrong in exactly the scenario
+    # that makes setting it manually necessary.
+    echo '  export QUANTUM_DIST="$(ls -dt /tmp/qdist/dist-* | head -1)"' >&2
     exit 2
 fi
 QBIN="$QUANTUM_DIST_ROOT/bin/quantum"
