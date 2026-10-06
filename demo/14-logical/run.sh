@@ -264,7 +264,18 @@ PCQ="$("$QBIN" logical precision --method circuit --algo qft --distance 3 \
         --p 0.02 --shots 400 --seed 99 2>/dev/null)"
 PCP="$("$QBIN" logical precision --method circuit --algo qpe --distance 3 \
         --p 0.02 --shots 400 --seed 99 2>/dev/null)"
-if [ -z "$PCQ" ] || [ -z "$PCP" ]; then
+# Skip ONLY when the dist predates the flag. Such a binary does not reject
+# `--method circuit`: it ignores it and prints the delta model with no
+# `method=` token in its header, so an empty-output test never fired and the
+# old bundle FAILED here instead of skipping. A binary that does print a
+# `method=` token but not `method=circuit` is a regression and runs the checks
+# (and fails) rather than skipping.
+PC_SKIP=0
+for out in "$PCQ" "$PCP"; do
+    [ -z "$out" ] && PC_SKIP=1
+    echo "$out" | head -1 | grep -q 'method=' || PC_SKIP=1
+done
+if [ "$PC_SKIP" = "1" ]; then
     note "  (skip) this dist's quantum has no 'logical precision --method circuit'"
 else
     PC_OK=1
