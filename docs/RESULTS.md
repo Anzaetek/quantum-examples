@@ -16,7 +16,7 @@ machine that produced the bundles. No entry is aspirational.
 
 ## Error correction — rotated surface code
 
-The headline result: **the logical error rate falls ~4× for every step in code
+The headline result: **the logical error rate falls ~3× for every step in code
 distance**, at a fixed 1% physical error rate. That is the sub-threshold scaling
 that makes error correction worth doing, and it is what the eval bundle lets you
 watch happen at d=3→5→7.
@@ -24,7 +24,7 @@ watch happen at d=3→5→7.
 | | Evaluation bundle | Full build |
 |---|---|---|
 | Largest code | `[[49,1,7]]` (d=7) — d=9 is refused at 81 qubits | **`[[169,1,13]]`** (d=13), 338/338 single-qubit X and Z errors corrected |
-| Logical error rate @ p=0.01 | d=3 `0.0032` · d=5 `0.0008` · d=7 `0.0002` | same law, extended: each distance step suppresses ~4× |
+| Logical error rate @ p=0.01 | d=3 `0.0032` · d=5 `0.0010` · d=7 `0.0003` (`quantum ecc --distance N --p 0.01 --shots 8000 --seed 7`; 3.2× then 3.3× per step; d=7 is ~2 failures in 8000 shots) | same law, extended to larger distances |
 | Backend agreement | statevector / stabilizer / MPS / Pauli-propagation agree bit-for-bit on the syndrome | same, at every distance the backend supports |
 | Decoder | exact minimum-weight matching | same |
 
