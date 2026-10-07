@@ -28,16 +28,15 @@ with `DEMO_REQUIRE_ALL=1`, judged on its per-demo verdict lines.
 
 | Bundle | sha256 | quantum · omega · libtorch | rustc | Tour |
 |---|---|---|---|---|
-| `mac-cpu-test` | `dd6875287a7394c1c32cd80fbe308db4390daf175f8887fd924a82eea90323b1` | 231b7c4 · ed146b4 · 2.7.0 (cpu) | 1.94.1 | **ran 14, ALL DEMOS PASSED** |
-| `mac-metal-test` | `ca71fe7a3e5d34599ae4493a564a585c6ab4f2de594cf8378c9a5f3bc3e87d34` | 231b7c4 · ed146b4 · 2.7.0 (metal) | 1.94.1 | **ran 14, ALL DEMOS PASSED** |
+| `mac-cpu-test` | `bf58d8cdfdbf455865ee28aad7bc50fad7c944e0be5275b3728afa539ad30dda` | 231b7c4 · ed146b4 · 2.7.0 (cpu) | 1.99.0 | **ran 14, ALL DEMOS PASSED** |
+| `mac-metal-test` | `adc445abe70b48822b27664409d84a0833c36d105cc7ce6ad846a8060112ba7c` | 231b7c4 · ed146b4 · 2.7.0 (metal) | 1.99.0 | **ran 14, ALL DEMOS PASSED** |
 | `linux-amd64-cpu-test` | `0b1aee0c322da23bba4bb73b281cbb2d4e48a15ba02b4b59327e332a852e3cb5` | 231b7c4 · ed146b4 · 2.7.0+cu128 (cpu) | 1.99.0 | ran 13, every pin met. Demo 08 takes its named skip ("binary reports CPU") because the test host has a GPU; on a GPU-less host it runs. |
 | `linux-amd64-gpu-test` | `8f714c8f67d88158648bfdee5c8a91ab93ee91f1aa5f11225161675f07738ff8` | 231b7c4 · ed146b4 · 2.7.0+cu128 (cuda) | 1.99.0 | **ran 14, ALL DEMOS PASSED** |
 | `linux-arm64-cpu-test` | `d5f04a118bf6a10fe14ec9916369cd18160a532a83a84a6103256bf9857e4a0a` (unchanged) | **8426b18** · — · none | — | **Older revision, not refreshed.** It cannot be executed on the build host, so it was not toured. The same-revision amd64 bundle failed demos 07, 08, 11 and 13 against the current `demo/` (those checks need a newer binary), so expect the same here. |
 
-**Same source revision, not the same toolchain.** The bundles at 231b7c4 share
-(quantum, omega, libtorch). They were compiled with different Rust
-toolchains (1.94.1 on the macOS build machine, 1.99.0 on the Linux one), so
-parity is claimed for that triple only.
+**Same source revision and the same toolchain.** The bundles at 231b7c4 share
+(quantum, omega, libtorch, rustc): every one of them was compiled with rustc
+1.99.0 (b940084d7 2026-09-28).
 
 **Running demos 06–08 needs libtorch at run time too, not only in the
 bundle.** Each bundle above carries `bin/quantum-finance`, but it links
