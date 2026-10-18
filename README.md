@@ -32,8 +32,9 @@ computing, and Lean 4 proofs — that you can try, on real binaries, in five min
 > shipped binary); `linux-amd64-cpu` ships the same QML/finance binary and runs demos 06–08, 15 and 16 once a
 > libtorch 2.7.0 runtime is on the host. Every Linux bundle — x86-64, arm64 **and riscv64** —
 > runs the full quantum tour, **including live error correction, Pauli propagation and transversal
-> QEC** (demos 12–14); the cross-built arm64/riscv64 bundles skip only the ML/finance demos
-> (06–08, 15, 16), which need a libtorch that cannot be cross-compiled. Expect rough edges.
+> QEC** (demos 12–14); the arm64 bundle is now built natively and ships QML/finance too (the full
+> `ran 16` tour, given the aarch64 libtorch); only the cross-built riscv64 bundle skips the
+> ML/finance demos (06–08, 15, 16), as there is no libtorch for riscv64. Expect rough edges.
 
 > 📊 **[`docs/RESULTS.md`](./docs/RESULTS.md)** — what these bundles show numerically, beside what
 > the unrestricted build does (code distances, circuit widths, shot floors), and a straight
@@ -124,8 +125,8 @@ docker run --rm --platform linux/amd64 -v "$PWD":/qx:ro debian:bookworm-slim bas
 > portability limit.)
 
 > Demos 06–08, 15 and 16 need the **libtorch runtime** and `bin/quantum-finance`, which ships in the
-> natively built bundles (**macOS** and **linux-amd64** cpu/gpu): libtorch cannot be
-> cross-compiled, so the arm64 and riscv64 bundles omit it and these five skip cleanly
+> natively built bundles (**macOS** cpu/metal, **linux-amd64** cpu/gpu and **linux-arm64**):
+> libtorch cannot be cross-compiled, so the riscv64 bundle omits it and these five skip cleanly
 > there. Demo 03 builds a small Rust client crate and skips when `cargo` isn't installed;
 > the other demos need only the shipped binaries.
 
@@ -140,15 +141,15 @@ Evaluation bundles are provided per platform in `dist/`:
 |---|---|---|---|
 | macOS (Apple Silicon) | `aarch64-apple-darwin` | ✅ | Metal + CPU, **incl. QML/finance** |
 | Linux x86-64 | `x86_64-unknown-linux-gnu` | ✅ | **`linux-amd64-cpu`** — core CLIs + live `ecc`/`expect`/`logical`, **+ QML/finance on CPU** (demos 06–08 need a [libtorch 2.7.0](https://download.pytorch.org/libtorch/cpu/) runtime on the host) |
-| Linux arm64 | `aarch64-unknown-linux-gnu` | ✅ | CPU (core CLIs + live `ecc`/`expect`/`logical`); cross-built, verified and toured under qemu |
+| Linux arm64 | `aarch64-unknown-linux-gnu` | ✅ | CPU (core CLIs + live `ecc`/`expect`/`logical`), **+ QML/finance on CPU** (built natively on arm64 Linux; demos 06–08, 15, 16 need the aarch64 [libtorch 2.7.0](https://download.pytorch.org/whl/cpu/torch/) wheel runtime on the host) |
 | Linux x86-64 + CUDA | `x86_64-unknown-linux-gnu` | ✅ | **`linux-amd64-gpu`** — incl. QML/finance on `Cuda(0)` (needs an NVIDIA driver + the [cu128 libtorch 2.7.0](https://download.pytorch.org/libtorch/cu128/) runtime for demos 06–08) |
 | Linux RISC-V | `riscv64gc-unknown-linux-gnu` | ✅ | CPU (core CLIs + live `ecc`/`expect`/`logical`); cross-built, verified and toured under qemu |
 
 The `quantum` / `quantum-server` / `quantum-client` CLIs are libtorch-free and portable (every
 bundle ships these); the QML/finance binary ships in the natively built bundles — macOS cpu/metal,
-`linux-amd64-cpu` and the Linux+CUDA `linux-amd64-gpu` bundle (its `quantum-finance` links
-`libtorch_cuda.so`, so `--device cuda` trains on the GPU) — and is absent from the cross-built
-arm64/riscv64 bundles. **Every binary is time-limited** (it
+`linux-amd64-cpu`, the Linux+CUDA `linux-amd64-gpu` bundle (its `quantum-finance` links
+`libtorch_cuda.so`, so `--device cuda` trains on the GPU) and `linux-arm64-cpu` — and is absent
+only from the cross-built riscv64 bundle. **Every binary is time-limited** (it
 expires) and the CLI is **qubit-capped** — 12 qubits for general circuits, with a separate
 64-qubit ceiling for the scalable `quantum ecc` / `quantum expect` (Pauli-propagation) paths (see
 `TEST-BUILD.txt`).

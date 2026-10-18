@@ -9,11 +9,12 @@ sha256 and tour verdicts, `docs/RESULTS.md` the numbers.
 The first release whose six bundles all embed the **Aria Quantum OSS 2.0.0**
 simulator backends (omega `5a15e73`), compiled with rustc 1.99.0.
 
-- **Bundles** (`dist/`): `mac-cpu`, `mac-metal` (quantum `174f7242`, native on
-  Apple Silicon); `linux-amd64-cpu`, `linux-amd64-gpu` (native), `linux-arm64-cpu`
-  and — new — `linux-riscv-cpu` (cross-built; quantum `222aabae`). Every bundle
+- **Bundles** (`dist/`): `mac-cpu`, `mac-metal` (native on Apple Silicon),
+  `linux-amd64-cpu`, `linux-amd64-gpu` (native on x86-64) and `linux-arm64-cpu`
+  (native, in an arm64 Linux container — no longer cross-built) at quantum
+  `983cff39`; `linux-riscv-cpu` (new; cross-built) at `222aabae`. Every bundle
   ships `ecc` / `expect` / `logical` live; QML/finance (`quantum-finance`) ships
-  in the four native bundles.
+  in the five native bundles.
 - **Limits proven from the binary, not from a text file.** Each bundle expires at
   unix `1801440000` (2027-02-01T00:00:00Z) and caps general circuits at 12
   qubits (64 for `ecc`/`expect`); the bundled `run.sh` and the toolkit's
@@ -35,15 +36,15 @@ simulator backends (omega `5a15e73`), compiled with rustc 1.99.0.
   sha256 equals the embedded copy's, a `--data` label file iff it is
   byte-identical to what the same binary's `regime-gen` derives from the pin
   (regenerated on the spot). `data-pin` proves the state from the binary;
-  `verify-dist.sh` gained a `pin:` line next to `cap:` and `expiry:`. Bundles
-  built before 2026-10-19 (`222aabae`) have no pin; demo 16 skips on them.
-- **Tour** (`demo/run-all.sh`, now 16 demos): the committed bundles' own
-  `demo/` copies predate demo 15 and report `ran 14, ALL DEMOS PASSED` on
-  mac-cpu, mac-metal and linux-amd64-gpu (demo 08 on `Cuda(0)`) and `ran 10`
-  in stock Debian containers on linux/amd64, arm64 and riscv64 (03 needs
-  cargo, 06–08 need libtorch); this repo's `demo/run-all.sh` adds 15-qas on
-  the same binaries (see `dist/README.md`); 16-provenance needs a bundle built
-  at or after the data pin.
+  `verify-dist.sh` gained a `pin:` line next to `cap:` and `expiry:`. The five
+  `983cff39` bundles carry the pin; the riscv64 bundle (`222aabae`, no
+  `quantum-finance`) has nothing to pin and demo 16 skips on it.
+- **Tour** (`demo/run-all.sh`, now 16 demos): `ran 16, skipped 0, ALL DEMOS
+  PASSED` on mac-cpu, mac-metal, linux-arm64-cpu (native) and linux-amd64-gpu
+  (demo 08 on `Cuda(0)`); `ran 15` on linux-amd64-cpu with a host libtorch
+  (08's GPU step wants the cuda bundle); `ran 10` in stock Debian containers
+  with no libtorch (03 needs cargo; 06–08, 15, 16 need libtorch), riscv64
+  under qemu. Per-bundle verdicts in `dist/README.md`.
 - **Docs**: `docs/aria-tutorial.md` checked against the shipped binary (Bell,
   QFT and the symbolic-model refusal); README platform table and demo index
   brought in line with what the bundles contain.
