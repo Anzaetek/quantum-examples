@@ -23,7 +23,7 @@ below resolves the binaries through `$QUANTUM_DIST` (see `common.sh`).
 | Folder | Model | Harness | Shows |
 |---|---|---|---|
 | [`01-bell/`](01-bell/) | Bell (Aria + QASM) | shell | **How to check the circuit** — `info`, `compile qasm/json`, `optimize`, and Aria→**Lean 4** proof |
-| [`02-qft/`](02-qft/) | QFT (parameterized Aria) | shell | A **parameterized** model instantiated at n=3/4 and exported to a Lean 4 theorem |
+| [`02-qft/`](02-qft/) | QFT (parameterized Aria) | shell | A **parameterized** model instantiated at n=3/4/5 and exported to a Lean 4 theorem |
 | [`03-rust-harness/`](03-rust-harness/) | redundant 3-qubit circuit (QASM) | **standalone Rust crate** | Integrating the shipped `quantum-server` into your own Rust app over the AF_UNIX JSON-RPC socket |
 | [`04-qos/`](04-qos/) | — | shell | **Quantum Oracle Sketching** through the stripped CLI (`quantum qos`) |
 | [`05-optimizer/`](05-optimizer/) | GHZ (Aria + QASM) | shell | A **real optimizer reduction** — a naive 7-gate GHZ collapses to the minimal 3 gates |
@@ -33,11 +33,13 @@ below resolves the binaries through `$QUANTUM_DIST` (see `common.sh`).
 | [`09-mbqc/`](09-mbqc/) | `mbqc_bell.aria` | shell | **MBQC** — compile a circuit to a one-way measurement pattern, optimize + simulate |
 | [`10-ubqc/`](10-ubqc/) | — | shell | **Blind QC** (UBQC/BFK) — run a pattern on a remote server that stays blind |
 | [`11-lean4/`](11-lean4/) | bundled `.aria` | shell | **Lean 4 extraction** — export Aria models to Lean 4 theorems (+ MBQC certificate) |
-| [`12-ecc/`](12-ecc/) | `surface.aria` | shell | **Error correction** — rotated surface code `[[9,1,3]]`/`[[25,1,5]]`, multi-backend syndrome + MWPM decode; d=5 on the RAM-safe stabilizer/MPS backends |
+| [`12-ecc/`](12-ecc/) | `surface.aria` | shell | **Error correction** — rotated surface code `[[9,1,3]]`/`[[25,1,5]]`/`[[49,1,7]]`, multi-backend syndrome + MWPM decode; d=5 on the RAM-safe stabilizer/MPS backends, d=7 via Pauli propagation (98/98 single errors corrected) |
 | [`13-pauliprop/`](13-pauliprop/) | `trotter_ising.aria` | shell | **Pauli propagation** — `quantum expect` reads `⟨O⟩` via a Heisenberg Pauli-string tree; Aria→Lean model, exact non-Clifford cross-check, certified truncation-error curve, 24-qubit GHZ where the statevector can't fit |
 | [`14-logical/`](14-logical/) | — (built-in codes, no model file) | shell | **Transversal QEC** — `quantum logical` runs algorithms on ENCODED qubits: Grover on Steane `[[7,1,3]]` and the 6.6.6 colour code (d=3/5/7), logical QFT/QPE, `[[15,1,3]]` magic-state distillation, and surface-code memory scaling. Cross-checked across 4 exact backends |
+| [`15-qas/`](15-qas/) | — (search space is built in) | shell | **QAS** — `arch-search --model qnn`: TPE over encoding × ansatz × readout × width × depth, walk-forward macro-F1 on the synthetic regime labels; `best_macro_f1 0.7687` vs majority-class `0.2007`, `selected 1`, deterministic (7 checks, ~45 s) |
+| [`16-provenance/`](16-provenance/) | — (the pin is in the binary) | shell | **Data provenance** — the eval `quantum-finance` is pinned to the shipped synthetic series: `data-pin` prints the embedded sha256, a one-byte-flipped copy and a one-label edit are refused (exit 3, digests / first differing line printed), `--export` round-trips byte for byte (10 checks, ~5 s) |
 
-> Demos 06–08 need the **libtorch runtime** (`export LIBTORCH=/path/to/libtorch`); they skip cleanly
+> Demos 06–08, 15 and 16 need the **libtorch runtime** (`export LIBTORCH=/path/to/libtorch`); they skip cleanly
 > without it. Demos 01–05 + the Rust harness need only the toolkit binaries.
 > A **gpu bundle** (`linux-amd64-gpu`) pairs with the **cu128 libtorch 2.7.0**
 > (its `quantum-finance` force-links `libtorch_cuda.so`); demo 08 then proves the
@@ -55,4 +57,4 @@ $QUANTUM_DIST/bin/quantum optimize circuit.qasm            # the optimized circu
 $QUANTUM_DIST/bin/quantum spec extract --aria model.aria --instantiate "Name()" --out OUT  # Lean 4 proof
 ```
 
-Run everything: `./run-all.sh` (drives all four demos; numbers only, asserts each).
+Run everything: `./run-all.sh` (drives all 16 demos; numbers only, asserts each; `DEMO_REQUIRE_ALL=1` turns every skip into a failure).

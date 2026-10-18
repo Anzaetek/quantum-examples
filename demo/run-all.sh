@@ -31,19 +31,21 @@ min_checks() {
         04-qos) echo 3 ;;   05-optimizer) echo 4 ;; 06-finance) echo 5 ;;
         07-qml-qcbm) echo 2 ;; 08-qml-classifier) echo 2 ;; 09-mbqc) echo 4 ;;
         10-ubqc) echo 2 ;;  11-lean4) echo 5 ;;  12-ecc) echo 19 ;;
-        13-pauliprop) echo 9 ;; 14-logical) echo 13 ;;
+        13-pauliprop) echo 9 ;; 14-logical) echo 13 ;; 15-qas) echo 7 ;;
+        16-provenance) echo 10 ;;
         *) echo "run-all.sh: no pinned check count for $1" >&2; exit 2 ;;
     esac
 }
 # Demos allowed to "(skip)", with the number of ✓ that must land BEFORE the
-# skip: 03 needs cargo (no toolchain on customer hosts); 06/07/08 need the
+# skip: 03 needs cargo (no toolchain on customer hosts); 06/07/08/15/16 need the
 # libtorch runtime + bin/quantum-finance (07/08 still prove the untrained
-# Lean-export refusal first); 12/13/14 need a native bundle (ecc/expect/
-# logical are inert in a cross-built core-CLI bundle; 13 proves Aria→Lean first).
+# Lean-export refusal first); 12/13/14 skip only on a bundle whose core CLI
+# was built without the omega-sim backends (none of the six current bundles;
+# 13 proves Aria→Lean first).
 # Prints nothing for demos that have no skip path.
 preskip_checks() {
     case "$1" in
-        03-rust-harness|06-finance|12-ecc|14-logical) echo 0 ;;
+        03-rust-harness|06-finance|12-ecc|14-logical|15-qas|16-provenance) echo 0 ;;
         07-qml-qcbm|08-qml-classifier|13-pauliprop) echo 1 ;;
     esac
 }
@@ -52,7 +54,7 @@ RC=0; RAN=(); SKIPPED=(); FAILED=()
 for d in 01-bell/inspect.sh 02-qft/inspect.sh 03-rust-harness/run.sh 04-qos/run.sh \
          05-optimizer/inspect.sh 06-finance/run.sh 07-qml-qcbm/run.sh 08-qml-classifier/run.sh \
          09-mbqc/run.sh 10-ubqc/run.sh 11-lean4/run.sh 12-ecc/run.sh 13-pauliprop/run.sh \
-         14-logical/run.sh; do
+         14-logical/run.sh 15-qas/run.sh 16-provenance/run.sh; do
     name="${d%%/*}"
     echo; echo "════════════════════════════════════════════════════════════"
     out="$(bash "$HERE/$d" 2>&1)"; rc=$?

@@ -66,6 +66,8 @@ still *print* a pass while demonstrating nothing.
 | MBQC / blind computation | circuit → measurement pattern, run on a server that stays blind | same |
 | Quantum Oracle Sketching | infidelity falls ~4× per doubling of N (`error_ratio_2x 3.9999`) | same law to N=16384 (`3.178e-11`) |
 | Transversal QEC | encoded Grover, logical QFT/QPE, Reed–Muller distillation, encoded QSP | same, at larger code distances |
+| Quantum circuit-architecture search (QAS) | 6 trials × 2 folds × 6 steps on 195 rows: walk-forward macro-F1 `0.7687` vs majority-class `0.2007`, deterministic | same binary, more budget: `0.7966` (6/2/12/400, 94 s), `0.8213` (8/2/20/400, 165 s), `0.8641` (10/2/30/400, 235 s); GBDT on the same labels `0.91` |
+| Data provenance | `quantum-finance` is pinned to the shipped synthetic series (sha256 `d0d2e8ea…`): a flipped byte or an edited label is refused, exit 3 | no pin — any data |
 
 ---
 

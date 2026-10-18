@@ -98,7 +98,11 @@ circuit QMLClassifier(L: int) {
 }
 ```
 
-The same model trains as a real QNN (`quantum-finance regime-classify --model qnn`).
+The same model trains as a real QNN (`quantum-finance regime-classify --model qnn`). Note that
+`quantum spec extract` **refuses** to export this model as written — `6 parameter(s) have no bound
+numeric value … Refusing to emit a proof obligation about a different circuit` (exit 1) — because
+a theorem about the untrained circuit would say nothing about the trained one; bind the angles
+first (demos 07 and 08 show the refusal, then the trained path).
 
 ## 5. Observables
 
@@ -118,8 +122,15 @@ plus photonic elements. Multi-qubit gates list their wires in order.
 ## 7. Where to go next
 
 - The `demo/` folder runs end-to-end Aria models against the binary distribution
-  (`demo/01-bell`, `demo/02-qft`, `demo/07-qml-qcbm`, `demo/09-mbqc`, `demo/11-lean4`).
-- `examples/aria/` has 36 worked models (Grover, Shor-ECDLP, QPE, teleport, MBQC, …).
-- `docs/spec-extraction.md` documents the Aria → Lean 4 pipeline in depth.
+  (`demo/01-bell`, `demo/02-qft`, `demo/07-qml-qcbm`, `demo/09-mbqc`, `demo/11-lean4`,
+  `demo/13-pauliprop`).
+- The toolkit source (commercial license) adds `examples/aria/` — 39 worked models (Grover,
+  Shor-ECDLP, QPE, teleport, MBQC, …) — and `docs/spec-extraction.md`, the Aria → Lean 4
+  pipeline in depth. Neither ships in this evaluation repo.
+
+The three circuit blocks above were run verbatim against the shipped `linux-amd64-cpu` binary
+(bundle `222aabae`): `Bell()` → a 51-line `Bell.lean`, `QFT(n=3)` → a 53-line `QFT.lean`,
+`QMLClassifier(L=2)` → the refusal quoted in §4; `quantum info` on the Bell QASM reports
+`Qubits: 2 · Gate count: 2 · H-count: 1`, and `quantum mbqc` prints `output_norm=1.000000`.
 
 Aria's point: a quantum model you can **read, parameterize, run, and prove** — from one source.
