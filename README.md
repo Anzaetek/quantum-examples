@@ -10,7 +10,7 @@ computing, and Lean 4 proofs — that you can try, on real binaries, in five min
 ![evaluation](https://img.shields.io/badge/license-evaluation%20only-7c5cff)
 ![status](https://img.shields.io/badge/status-work%20in%20progress-f59e0b)
 ![binaries](https://img.shields.io/badge/binaries-time--limited%20%C2%B7%20qubit--capped-36c2ff)
-![platforms](https://img.shields.io/badge/platforms-macOS%20%C2%B7%20linux--amd64%20(CPU%2BCUDA)%20%C2%B7%20linux--arm64-22e0c8)
+![platforms](https://img.shields.io/badge/platforms-macOS%20%C2%B7%20linux--amd64%20(CPU%2BCUDA)%20%C2%B7%20linux--arm64%20%C2%B7%20linux--riscv64-22e0c8)
 ![deps](https://img.shields.io/badge/host%20deps-none%20(self--contained)-2ea043)
 
 `EVALUATION ONLY` · `TIME-LIMITED` · `QUBIT-CAPPED` · `WORK IN PROGRESS` · see [LICENSE](./LICENSE)
@@ -111,16 +111,18 @@ docker run --rm --platform linux/amd64 -v "$PWD":/qx:ro debian:bookworm-slim bas
 | 14 | `demo/14-logical` | **Transversal QEC** — `quantum logical` runs algorithms on ENCODED qubits: Grover on Steane `[[7,1,3]]` and the 6.6.6 colour code (d=3/5/7), logical QFT/QPE, `[[15,1,3]]` magic-state distillation, and surface-code memory scaling. Cross-checked across 4 exact backends |
 
 > Demos 12–14 (`ecc`, `expect`, `logical`) run **live on every CPU bundle** — macOS, Linux
-> x86-64 **and** Linux arm64 — with the `omega-sim` backends compiled in. Measured at
-> `8426b18` in a stock `debian:bookworm-slim` container: **19 / 8 / 13 checks** and
-> `ALL DEMOS PASSED` on `linux/amd64` and `linux/arm64` alike. (An earlier revision did ship
-> those backends inert on the cross-built arm64 bundle. That was a mount gap in the cross
-> build, fixed in 16e E3a/E3c — never a portability limit.)
+> x86-64, Linux arm64 **and** Linux riscv64 — with the `omega-sim` backends compiled in.
+> Measured at `222aabae` in stock Debian containers: **19 / 9 / 15 checks** and
+> `ALL DEMOS PASSED` on `linux/amd64`, `linux/arm64` and `linux/riscv64` alike (the last two
+> under qemu). (An earlier revision did ship those backends inert on the cross-built arm64
+> bundle. That was a mount gap in the cross build, fixed in 16e E3a/E3c — never a
+> portability limit.)
 
 > Demos 06–08 need the **libtorch runtime** and `bin/quantum-finance`, which ships in the
-> **macOS** bundles only: libtorch cannot be cross-compiled, so the Linux bundles omit it and
-> these three skip cleanly there. Demo 03 builds a small Rust client crate and skips when
-> `cargo` isn't installed; the other demos need only the shipped binaries.
+> natively built bundles (**macOS** and **linux-amd64** cpu/gpu): libtorch cannot be
+> cross-compiled, so the arm64 and riscv64 bundles omit it and these three skip cleanly
+> there. Demo 03 builds a small Rust client crate and skips when `cargo` isn't installed;
+> the other demos need only the shipped binaries.
 
 > All finance/QML data is **synthetic** (a rescaled, noised, renamed series — *not* real market
 > data); see `demo/data/README.md`.
@@ -133,9 +135,9 @@ Evaluation bundles are provided per platform in `dist/`:
 |---|---|---|---|
 | macOS (Apple Silicon) | `aarch64-apple-darwin` | ✅ | Metal + CPU, **incl. QML/finance** |
 | Linux x86-64 | `x86_64-unknown-linux-gnu` | ✅ | CPU (core CLIs + live `ecc`/`expect`) |
-| Linux arm64 | `aarch64-unknown-linux-gnu` | ✅ | CPU (core CLIs) |
+| Linux arm64 | `aarch64-unknown-linux-gnu` | ✅ | CPU (core CLIs + live `ecc`/`expect`); cross-built, verified and toured under qemu |
 | Linux x86-64 + CUDA | `x86_64-unknown-linux-gnu` | ✅ | **`linux-amd64-gpu`** — incl. QML/finance on `Cuda(0)` (needs an NVIDIA driver + the [cu128 libtorch 2.7.0](https://download.pytorch.org/libtorch/cu128/) runtime for demos 06–08) |
-| Linux RISC-V | `riscv64gc-unknown-linux-gnu` | ⏳ | CPU |
+| Linux RISC-V | `riscv64gc-unknown-linux-gnu` | ✅ | CPU (core CLIs + live `ecc`/`expect`); cross-built, verified and toured under qemu |
 
 The `quantum` / `quantum-server` / `quantum-client` CLIs are libtorch-free and portable (the Linux
 CPU bundles ship these); the QML/finance binary ships where a paired libtorch runtime is available

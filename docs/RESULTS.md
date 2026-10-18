@@ -5,7 +5,7 @@ limited in three ways, all baked in at build time:
 
 | Limit | Evaluation bundle | Full build |
 |---|---|---|
-| **Expiry** | 90 days from the build moment; then the binaries refuse to run | none |
+| **Expiry** | absolute: unix `1801440000` = 2027-02-01T00:00:00Z in every current bundle (read back from the server's `ping` reply by `verify-dist.sh`, so the date is the binary's, not this file's); then the binaries refuse to run | none |
 | **Qubit cap** | 12 qubits general · 64 for `ecc` / `expect` | unlimited |
 | **Monte-Carlo shots** | tuned to the *statistical floor* (see below) | unlimited |
 
