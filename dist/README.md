@@ -28,8 +28,8 @@ with `DEMO_REQUIRE_ALL=1`, judged on its per-demo verdict lines.
 
 | Bundle | sha256 | quantum · omega · libtorch | rustc | Tour |
 |---|---|---|---|---|
-| `mac-cpu-test` | `bf58d8cdfdbf455865ee28aad7bc50fad7c944e0be5275b3728afa539ad30dda` | 231b7c4 · ed146b4 · 2.7.0 (cpu) | 1.99.0 | **ran 14, ALL DEMOS PASSED** |
-| `mac-metal-test` | `adc445abe70b48822b27664409d84a0833c36d105cc7ce6ad846a8060112ba7c` | 231b7c4 · ed146b4 · 2.7.0 (metal) | 1.99.0 | **ran 14, ALL DEMOS PASSED** |
+| `mac-cpu-test` | `55a139ad7b21ae733df551f0cdd7869f2640f71330a4afdb94725de4063fbd27` | 174f7242 · 5a15e73 · 2.7.0 (cpu) | 1.99.0 | **ran 14, ALL DEMOS PASSED** |
+| `mac-metal-test` | `81e50b8c12a9f374c87551468eb4e56087c39a136548889d7329dfd46a75260f` | 174f7242 · 5a15e73 · 2.7.0 (metal) | 1.99.0 | **ran 14, ALL DEMOS PASSED**; `regime-classify train --model dnn --device metal` prints `device Mps` |
 | `linux-amd64-cpu-test` | `760d2294bb37de8f9e76247fbe324efa48ffd9d265098b145effce98b2d93bc5` | 174f7242 · 5a15e73 · 2.7.0+cu128 (cpu) | 1.99.0 | ran 13, every pin met (12-ecc=19, 13-pauliprop=9, 14-logical=15). Demo 08 takes its named skip ("binary reports CPU") because the test host has a GPU; on a GPU-less host it runs. |
 | `linux-amd64-gpu-test` | `0da137272df2b7f750d8e5df6e7d0e8199565b62dbfdaa6d5c49cc4c5bd4c480` | 174f7242 · 5a15e73 · 2.7.0+cu128 (cuda) | 1.99.0 | **ran 14, ALL DEMOS PASSED** (08 trains on `device Cuda(0)`) |
 | `linux-arm64-cpu-test` | `d5f04a118bf6a10fe14ec9916369cd18160a532a83a84a6103256bf9857e4a0a` (unchanged) | **8426b18** · — · none | — | **Older revision, not refreshed.** It cannot be executed on the build host, so it was not toured. The same-revision amd64 bundle failed demos 07, 08, 11 and 13 against the current `demo/` (those checks need a newer binary), so expect the same here. |
